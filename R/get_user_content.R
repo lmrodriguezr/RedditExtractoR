@@ -27,7 +27,12 @@ get_single_user_content <- function(user) {
 
 # Concatenate nested pages of the same content type
 concat_posts <- function(posts, content_type){
-  lapply(posts, function(page) page[[content_type]]) |>
+  lapply(
+          posts,
+          function(page)
+            if(content_type %in% names(page)) page[[content_type]]
+            else list()
+        ) |>
     remove_na() |>
     rbind_list() |>
     dedup_df()
